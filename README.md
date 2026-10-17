@@ -93,12 +93,17 @@ npm run seed:destroy   # wipe it back out
 
 Demo logins after seeding (all `password123`):
 
-| Role | Email |
-|---|---|
-| Admin | admin@gmail.com |
-| Receptionist | reception@gmail.com |
-| Doctor | dr.yusuf@gmail.com |
-| Patient | patient@gmail.com |
+| Role | Email | Details |
+|---|---|---|
+| Admin | `admin@gmail.com` | Full clinic & revenue control |
+| Receptionist | `reception@gmail.com` | Front-desk, appointments & intake |
+| Cardiologist | `dr.yusuf@gmail.com` | Dr. Yusuf Hassan (Somali) |
+| Pediatrician | `dr.faduma@gmail.com` | Dr. Faduma Mohamed (Somali) |
+| Orthopedic Surgeon | `dr.abdirahman@gmail.com` | Dr. Cabdiraxmaan Geedi (Somali) |
+| Neurologist | `dr.sarah@gmail.com` | Dr. Sarah Jenkins (Visiting UK) |
+| Patient Portal | `patient@gmail.com` | Abdirahman Jama (Appointments & Records) |
+| Patient Portal 2 | `sahra@gmail.com` | Sahra Mohamed (Prenatal & Invoices) |
+
 
 ### 3. Frontend
 
