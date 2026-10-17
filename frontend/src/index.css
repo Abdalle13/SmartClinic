@@ -121,4 +121,17 @@
     body { background: white; }
     .card { box-shadow: none; border: 1px solid #e5e7eb; }
   }
+
+  /* Hide Netlify drawer / badge */
+  [data-netlify-deploy-id],
+  #netlify-drawer,
+  .netlify-badge,
+  iframe[src*="netlify"],
+  div[class*="netlify-drawer"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 }
+
