@@ -123,12 +123,26 @@ const Footer = () => {
 
         </div>
 
-        <div className="pt-8 border-t border-gray-800 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm">© 2026 SmartClinic. Created by Abdalle.</p>
-          <div className="flex gap-6 text-sm text-gray-500">
+        <div className="pt-8 border-t border-gray-800 flex flex-col items-center justify-center text-center gap-3">
+          <div className="flex gap-6 text-sm text-gray-500 mb-1">
             <button onClick={() => navigate('/privacy-policy')} className="hover:text-emerald-400 transition-colors">Privacy Policy</button>
+            <span className="text-gray-700">•</span>
             <button onClick={() => navigate('/terms-of-service')} className="hover:text-emerald-400 transition-colors">Terms of Service</button>
           </div>
+          <p className="text-gray-400 text-sm">
+            © 2026 SmartClinic. All rights reserved.
+          </p>
+          <p className="text-gray-400 text-sm">
+            Built by{' '}
+            <a
+              href="https://github.com/Abdalle13"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-amber-500 hover:text-amber-400 font-semibold transition-colors"
+            >
+              Abdalle Hussein
+            </a>
+          </p>
         </div>
       </div>
     </footer>

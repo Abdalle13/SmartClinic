@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Activity, Eye, EyeOff, LogIn } from 'lucide-react';
+import { Activity, Eye, EyeOff, LogIn, ArrowLeft } from 'lucide-react';
 import { login, clearError } from '../redux/slices/authSlice';
 import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
@@ -71,12 +72,22 @@ const LoginPage = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="p-8 lg:p-10 flex flex-col justify-center"
         >
-          {/* Mobile logo */}
-          <div className="flex items-center gap-3 mb-8 lg:hidden">
-            <div className="w-9 h-9 bg-emerald-500 rounded-xl flex items-center justify-center">
-              <Activity size={20} className="text-white" />
+          <div className="flex items-center justify-between mb-6">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-emerald-600 transition-colors group"
+            >
+              <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
+              Back to Home
+            </Link>
+
+            {/* Mobile logo */}
+            <div className="flex items-center gap-2 lg:hidden">
+              <div className="w-7 h-7 bg-emerald-500 rounded-lg flex items-center justify-center">
+                <Activity size={16} className="text-white" />
+              </div>
+              <p className="font-bold text-gray-900 text-sm">SmartClinic</p>
             </div>
-            <p className="text-xl font-bold text-gray-900">SmartClinic</p>
           </div>
 
           <div className="mb-8">

@@ -19,6 +19,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const { user } = useSelector((s) => s.auth);
   const [featuredDoctors, setFeaturedDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [bookingForm, setBookingForm] = useState({ name: '', phone: '', email: '', department: '', date: '', time: '09:00' });
   const [bookingStatus, setBookingStatus] = useState(null);
   const [activeService, setActiveService] = useState(null);
@@ -135,25 +136,6 @@ const LandingPage = () => {
                 </Button>
               )}
             </div>
-
-
-            <div className="mt-12 flex items-center justify-center lg:justify-start gap-6 pt-8 border-t border-gray-100">
-              <div className="flex -space-x-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <img key={i} className="w-12 h-12 rounded-full border-4 border-white object-cover" src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="Patient" />
-                ))}
-              </div>
-              <div className="text-left">
-                <div className="flex items-center gap-1 text-amber-400 mb-1">
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                  <Star size={16} fill="currentColor" />
-                </div>
-                <p className="text-sm font-medium text-gray-900">Trusted by 10,000+ patients</p>
-              </div>
-            </div>
           </motion.div>
 
           <motion.div
@@ -168,20 +150,7 @@ const LandingPage = () => {
               alt="Medical Professionals"
               className="w-full rounded-[3rem] shadow-2xl object-cover aspect-[4/3] lg:aspect-square"
             />
-            {/* Floating badge 1 */}
-            <motion.div
-              animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="hidden sm:flex absolute top-10 -left-8 md:-left-12 bg-white p-4 rounded-2xl shadow-xl items-center gap-4 border border-gray-50"
-            >
-              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-                <ShieldCheck size={24} />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-gray-900">Fully Certified</p>
-                <p className="text-xs text-gray-500">ISO 9001:2015</p>
-              </div>
-            </motion.div>
+            {/* 24/7 Support Badge */}
             {/* Floating badge 2 */}
             <motion.div
               animate={{ y: [0, 10, 0] }}
@@ -225,7 +194,8 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow group w-full max-w-sm mx-auto md:max-w-none flex flex-col"
+                onClick={() => setSelectedDoctor(doc)}
+                className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all group w-full max-w-sm mx-auto md:max-w-none flex flex-col cursor-pointer"
               >
                 <div className="relative aspect-[4/3] sm:h-64 sm:aspect-auto bg-slate-100 overflow-hidden flex items-center justify-center">
                   {doc.image ? (
@@ -267,7 +237,28 @@ const LandingPage = () => {
                       <p className="font-semibold text-gray-900">1K+</p>
                     </div>
                   </div>
-                  <Button className="w-full" onClick={() => document.getElementById('appointment-widget').scrollIntoView({ behavior: 'smooth' })}>Book Visit</Button>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="secondary"
+                      className="flex-1 text-sm py-2.5 rounded-xl"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedDoctor(doc);
+                      }}
+                    >
+                      View Details
+                    </Button>
+                    <Button
+                      className="flex-1 text-sm py-2.5 rounded-xl shadow-md shadow-emerald-500/20"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setBookingForm(prev => ({ ...prev, department: doc.specialization }));
+                        document.getElementById('appointment-widget')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                    >
+                      Book Visit
+                    </Button>
+                  </div>
                 </div>
               </motion.div>
             )) : (
@@ -465,6 +456,102 @@ const LandingPage = () => {
             >
               Book This Service
             </Button>
+          </div>
+        )}
+      </Modal>
+
+      {/* Doctor Details Modal */}
+      <Modal
+        isOpen={!!selectedDoctor}
+        onClose={() => setSelectedDoctor(null)}
+        title={selectedDoctor ? `Dr. ${selectedDoctor.name}` : ''}
+        size="md"
+      >
+        {selectedDoctor && (
+          <div className="space-y-6 py-2">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              <div className="w-28 h-28 rounded-2xl bg-slate-100 overflow-hidden flex-shrink-0 relative border border-gray-100 shadow-sm flex items-center justify-center">
+                {selectedDoctor.image ? (
+                  <img
+                    src={selectedDoctor.image}
+                    alt={selectedDoctor.name}
+                    className="w-full h-full object-cover object-top"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-emerald-100 text-emerald-700 font-bold text-3xl">
+                    {selectedDoctor.name?.[0]?.toUpperCase()}
+                  </div>
+                )}
+              </div>
+              <div className="flex-1 text-center sm:text-left">
+                <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 mb-2">
+                  {selectedDoctor.specialization}
+                </span>
+                <h3 className="text-xl font-bold text-gray-900">Dr. {selectedDoctor.name}</h3>
+                <div className="flex flex-wrap justify-center sm:justify-start gap-4 text-xs text-gray-500 mt-2">
+                  <span className="flex items-center gap-1 font-medium text-gray-700">
+                    <ShieldCheck size={14} className="text-emerald-500" />
+                    {selectedDoctor.experience || '10+'} Years Experience
+                  </span>
+                  {selectedDoctor.consultationFee > 0 && (
+                    <span className="flex items-center gap-1 font-medium text-gray-700">
+                      Fee: ${selectedDoctor.consultationFee}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {selectedDoctor.bio && (
+              <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+                <h4 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">About Doctor</h4>
+                <p className="text-sm text-gray-600 leading-relaxed">{selectedDoctor.bio}</p>
+              </div>
+            )}
+
+            {selectedDoctor.schedule && (
+              <div className="bg-emerald-50/50 rounded-2xl p-4 border border-emerald-100">
+                <div className="flex items-center gap-2 mb-2 text-emerald-800 font-semibold text-sm">
+                  <Clock size={16} className="text-emerald-600" />
+                  <span>Working Hours & Availability</span>
+                </div>
+                {selectedDoctor.schedule.days && (
+                  <div className="flex flex-wrap gap-1.5 mb-2">
+                    {selectedDoctor.schedule.days.map((day) => (
+                      <span key={day} className="px-2 py-0.5 rounded-md bg-white text-emerald-800 text-xs font-medium border border-emerald-100 shadow-2xs">
+                        {day}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                {selectedDoctor.schedule.startTime && (
+                  <p className="text-xs text-emerald-700 font-medium">
+                    Hours: {selectedDoctor.schedule.startTime} - {selectedDoctor.schedule.endTime}
+                  </p>
+                )}
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2 border-t border-gray-100">
+              <Button
+                variant="secondary"
+                className="flex-1"
+                onClick={() => setSelectedDoctor(null)}
+              >
+                Close
+              </Button>
+              <Button
+                className="flex-1 shadow-md shadow-emerald-500/20"
+                onClick={() => {
+                  const doc = selectedDoctor;
+                  setSelectedDoctor(null);
+                  setBookingForm(prev => ({ ...prev, department: doc.specialization }));
+                  document.getElementById('appointment-widget')?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                Book Appointment
+              </Button>
+            </div>
           </div>
         )}
       </Modal>
