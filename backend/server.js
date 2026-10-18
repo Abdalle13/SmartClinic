@@ -20,22 +20,53 @@ import pharmacyRoutes from './routes/pharmacyRoutes.js';
 import uploadRoutes from './routes/uploadRoutes.js';
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://smartclinichs.netlify.app',
+  process.env.FRONTEND_URL,
+].filter(Boolean);
+
 app.use(helmet());
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production'
-    ? process.env.FRONTEND_URL
-    : '*',
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (
+      process.env.NODE_ENV !== 'production' ||
+      allowedOrigins.some((allowed) => origin === allowed || origin === allowed.replace(/\/$/, '')) ||
+      origin.endsWith('.netlify.app') ||
+      origin.endsWith('.vercel.app')
+    ) {
+      return callback(null, true);
+    }
+    return callback(null, true);
+  },
   credentials: true,
 }));
+
 // Raised from the default (~100kb) so base64-encoded file attachments
 // (X-rays, lab reports) can pass through the /api/upload proxy as JSON.
 app.use(express.json({ limit: '8mb' }));
 app.use(express.urlencoded({ extended: true, limit: '8mb' }));
 app.use(mongoSanitize());
+
+// Ensure MongoDB connection before handling any request (Serverless safe)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error('Database connection error in request:', error);
+    return res.status(500).json({
+      message: 'Database connection failed',
+      error: error.message,
+    });
+  }
+});
+
 app.use('/api', apiLimiter);
 
 // Routes
