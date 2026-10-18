@@ -6,6 +6,7 @@ import Button from '../ui/Button';
 import { logout } from '../../redux/slices/authSlice';
 
 const NAV_LINKS = [
+  { name: 'Home', isHome: true },
   { name: 'About Us', path: '/about' },
   { name: 'Our Doctors', hash: '#doctors' },
   { name: 'Services', hash: '#services' },
@@ -80,8 +81,16 @@ const Header = () => {
           {NAV_LINKS.map((link) => (
             <button
               key={link.name}
-              onClick={() => (link.path ? navigate(link.path) : goToSection(link.hash))}
-              className="text-sm font-medium text-gray-600 hover:text-emerald-600 transition-colors"
+              onClick={() => {
+                if (link.isHome) goHome();
+                else if (link.path) navigate(link.path);
+                else goToSection(link.hash);
+              }}
+              className={`text-sm font-medium transition-colors ${
+                link.isHome && isHome && !location.hash
+                  ? 'text-emerald-600 font-semibold'
+                  : 'text-gray-600 hover:text-emerald-600'
+              }`}
             >
               {link.name}
             </button>
@@ -128,10 +137,15 @@ const Header = () => {
             <button
               key={link.name}
               onClick={() => {
-                if (link.path) { setMobileOpen(false); navigate(link.path); }
+                if (link.isHome) goHome();
+                else if (link.path) { setMobileOpen(false); navigate(link.path); }
                 else goToSection(link.hash);
               }}
-              className="block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-emerald-600 transition-colors"
+              className={`block w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                link.isHome && isHome && !location.hash
+                  ? 'bg-emerald-50 text-emerald-600 font-semibold'
+                  : 'text-gray-700 hover:bg-gray-50 hover:text-emerald-600'
+              }`}
             >
               {link.name}
             </button>
