@@ -128,21 +128,31 @@ const PublicDoctorsPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.05 }}
-                className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all group w-full sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)]"
+                className="bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all group w-full max-w-sm sm:max-w-none sm:w-[calc(50%-12px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-18px)] flex flex-col"
               >
-                <div className="h-48 bg-gray-100 relative overflow-hidden">
+                <div className="relative aspect-[4/3] sm:h-52 sm:aspect-auto bg-slate-100 overflow-hidden flex items-center justify-center">
                   {doc.image ? (
-                    <img
-                      src={doc.image}
-                      alt={doc.name}
-                      className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    />
+                    <div className="w-full h-full relative overflow-hidden flex items-center justify-center bg-slate-100">
+                      {/* Ambient blur backdrop to fill card frame smoothly */}
+                      <img
+                        src={doc.image}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-110 pointer-events-none"
+                      />
+                      {/* Full doctor image fitted without cropping */}
+                      <img
+                        src={doc.image}
+                        alt={doc.name}
+                        className="relative z-10 w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-emerald-100 text-emerald-700 font-bold text-4xl">
                       {doc.name?.[0]?.toUpperCase()}
                     </div>
                   )}
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-emerald-600 uppercase">
+                  <div className="absolute top-3 right-3 z-20 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-bold text-emerald-600 uppercase shadow-sm">
                     {doc.specialization}
                   </div>
                 </div>

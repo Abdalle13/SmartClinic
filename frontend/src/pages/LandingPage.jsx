@@ -225,17 +225,31 @@ const LandingPage = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow group"
+                className="bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-shadow group w-full max-w-sm mx-auto md:max-w-none flex flex-col"
               >
-                <div className="h-64 bg-gray-200 overflow-hidden relative">
+                <div className="relative aspect-[4/3] sm:h-64 sm:aspect-auto bg-slate-100 overflow-hidden flex items-center justify-center">
                   {doc.image ? (
-                    <img src={doc.image} alt={doc.name} className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500" />
+                    <div className="w-full h-full relative overflow-hidden flex items-center justify-center bg-slate-100">
+                      {/* Ambient blur backdrop to fill card frame smoothly */}
+                      <img
+                        src={doc.image}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover blur-md opacity-25 scale-110 pointer-events-none"
+                      />
+                      {/* Full doctor image fitted without cropping */}
+                      <img
+                        src={doc.image}
+                        alt={doc.name}
+                        className="relative z-10 w-full h-full object-contain p-2 group-hover:scale-105 transition-transform duration-500"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center bg-emerald-100 text-emerald-700 font-bold text-5xl">
                       {doc.name?.[0]?.toUpperCase()}
                     </div>
                   )}
-                  <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-emerald-600">
+                  <div className="absolute bottom-4 right-4 z-20 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-emerald-600 shadow-sm">
                     Featured
                   </div>
                 </div>
